@@ -5,21 +5,21 @@
   bool hasListeners;
   UIInterfaceOrientation _lastDeviceOrientation;
 }
-
-- (instancetype)init
-{
-    if ((self = [super init])) {
-        _lastDeviceOrientation = [self getDeviceOrientation];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
-        [self addListener:@"OrientatitionDevicesChanged"];
-    }
-    return self;
+// Will be called when this module's first listener is added.
+-(void)startObserving {
+    hasListeners = YES;
+    _lastDeviceOrientation = [self getDeviceOrientation];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
+    [self addListener:@"OrientatitionDevicesChanged"];
+    // Set up any upstream listeners or background tasks as necessary
 }
 
-- (void)dealloc
-{
+// Will be called when this module's last listener is removed, or on dealloc.
+-(void)stopObserving {
+    hasListeners = NO;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self removeListeners:1];
+    // Remove upstream listeners, stop unnecessary background tasks
 }
 
 - (UIInterfaceOrientation)getDeviceOrientation {
