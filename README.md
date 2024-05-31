@@ -7,7 +7,9 @@ get the device orientation from sensors not from screen
 ```sh
 npm install rn-device-orientation
 ```
-
+```sh
+cd ios && pod install && cd ..
+```
 ## Usage
 
 ```js
